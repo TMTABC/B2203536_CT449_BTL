@@ -1,34 +1,32 @@
 const NhanVien = require("../models/NhanVien")
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const authentication = require("../middleware/authentication");
 
 const register = async(req,res)=>{
-    const {HoTen,Password,ChucVu,DiaChi,SoDienThoai,password_confirm,MSNV} = req.body;
-    if(!HoTen||!Password||!ChucVu||!SoDienThoai||!DiaChi||!password_confirm,!MSNV) return res.status(422).json({"message":"Invalid fields"})
-    if(Password!==password_confirm) return res.sendStatus(422).json({"message":"Password don't match"})
+    const {HoTen,password,ChucVu,DiaChi,SoDienThoai,password_confirm,MSNV} = req.body;
+    if(!HoTen||!password||!ChucVu||!SoDienThoai||!DiaChi||!password_confirm,!MSNV) return res.status(422).json({"message":"Invalid fields"})
+    if(password!==password_confirm) return res.status(422).json({"message":"password don't match"})
 
     const nhanVienExists = await NhanVien.exists({MSNV}).exec();
-    if(nhanVienExists) return res.sendStatus(409)
+    if(nhanVienExists) return res.status(409)
 
     try{
-        hashedPassword = await bcrypt.hash(Password,10)
-        await NhanVien.create({MSNV,HoTen,Password:hashedPassword,ChucVu,DiaChi,SoDienThoai});
-        return res.sendStatus(201);
+        hashedpassword = await bcrypt.hash(password,10)
+        await NhanVien.create({MSNV,HoTen,password:hashedpassword,ChucVu,DiaChi,SoDienThoai});
+        return res.status(201);
     }catch(e){
-        return res.sendStatus(400).json({message:"Could not register"});
+        return res.status(400).json({message:"Could not register"});
     }
 }
 
 const login = async(req,res)=>{
-    const {MSNV,Password} = req.body;
-    if(!MSNV||!Password) return res.sendStatus(422).json({"message":"Invalid fields"})
+    const {MSNV,password} = req.body;
+    if(!MSNV||!password) return res.status(422).json({"message":"Invalid fields"})
     const nhanVien = await NhanVien.findOne({MSNV}).exec(); 
 
-    if(!nhanVien) return res.sendStatus(401)
-
-    const match = await bcrypt.compare(Password, nhanVien.Password)
-    if(!match) return res.sendStatus(401).json({message:"Email or password incorrect"})
+    if(!nhanVien) return res.status(401)
+    const match = await bcrypt.compare(password, nhanVien.password)
+    if(!match) return res.status(401).json({message:"Email or password incorrect"})
     
     const accessToken = jwt.sign(
         {

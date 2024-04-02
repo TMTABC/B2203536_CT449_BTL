@@ -13,7 +13,7 @@ const NhanVienSchema = Schema(
             type:String,
             require:true
         },
-        Password:{
+        password:{
             type:String,
             require:true,
             min:6,
