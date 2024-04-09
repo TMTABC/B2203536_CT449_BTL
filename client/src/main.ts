@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import { authetication } from './plugins/authentication'
 import App from './App.vue'
 import router from './router'
 
@@ -10,6 +10,8 @@ import 'bootstrap'
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router)
 
-app.mount('#app')
+authetication.install().then(()=>{
+    app.use(router)
+    app.mount('#app')
+})

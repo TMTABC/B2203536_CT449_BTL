@@ -9,7 +9,7 @@ const NhanVienSchema = Schema(
             require:true,
             index   : { unique: true }
         },
-        HoTenNV:{
+        HoTen:{
             type:String,
             require:true
         },

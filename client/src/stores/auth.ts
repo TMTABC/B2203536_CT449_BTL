@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import useApi from '@/composables/useApi'
+import {useApi,useApiPrivate} from '@/composables/useApi'
 
 export interface User{
     id:String,
@@ -42,10 +42,20 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: (state:State) => state.user?.id? true:false
     },
     actions:{
+        async attempt(){
+            try{
+                await this.refresh()
+                await this.getUser()
+            }catch(error){
+                return error
+            }
+            return
+        },
         async login(payload :LoginData){
             try{
                 const {data} = await useApi().post(`/api/auth/login`,payload);
                 this.accessToken=data?.access_token
+                await this.getUser()
                 return data
             }catch(error : Error | any){
                 throw error.message
@@ -61,7 +71,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async getUser(){
             try{
-                const {data} = await useApi().get(`/api/auth/user`);
+                const {data} = await useApiPrivate().get(`/api/auth/user`);
                 this.user = data
                 return data
             }catch(error : Error | any){
@@ -80,7 +90,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async refresh(){
             try{
-                const {data} = await useApi().post(`/api/auth/refresh`);
+                const {data} = await useApiPrivate().post(`/api/auth/refresh`);
                 this.accessToken = data?.access_token
                 return data
             }catch(error : Error | any){
