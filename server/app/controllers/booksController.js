@@ -3,14 +3,13 @@ const BookService = require("../services/bookService");
 const MongoDB = require("../utils/mongo");
 
 exports.create = async(req,res,next)=>{
-    console.log(req.body);
     if(!req.body?.MaSach){
         return next(new ApiError(400,"Name can not be empty"));
     }
     try{
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.create(req.body);
-        return res.send(document);
+        return res.status(document.errCode).send(document);
     }catch(err){
         console.log(err)
         return next(new ApiError(500,"A error occurred while creating book"));

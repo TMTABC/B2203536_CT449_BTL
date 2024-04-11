@@ -39,6 +39,7 @@ app.use('/api/auth',require("./app/routes/api/auth"))
 app.use('/api/nxb',require("./app/routes/api/nxb"))
 app.use('/api/reader',require("./app/routes/api/reader"))
 app.use('/api/book',require("./app/routes/api/book"))
+app.use('/api/followbook',require("./app/routes/api/followBook"))
 app.all('*',(req,res)=>{
     res.status(404)
     if(req.accepts('json')){

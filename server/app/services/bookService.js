@@ -24,13 +24,17 @@ class BookService{
         const book = this.extractBookData(payload);
         const nxbService = new NXBService(MongoDB.client);
         const document = await nxbService.findByName(payload.MaNXB);
-        if(document==[]) return {errCode:document.errCode,message:document.message}
-        const result = await this.Book.findOneAndUpdate(
+        const bookExist = new BookService(MongoDB.client);
+        const isExist = await bookExist.findByName(payload.MaSach);
+        if(isExist) return {errCode:400,message:"ma sach is exist"}
+        if(!document.length) return {errCode:404,message:"nxb is not exist"};
+        else{
+            const result = await this.Book.findOneAndUpdate(
             book,
             {$set:{publish : book.publish === true}},
             {returnDocument:"after",upsert:true}
         )
-        return {errCode:201,result,message:"Create Book success"};
+        return {errCode:200,result,message:"Create Book success"};}
     }
     async find(filter) {
         const cursor = await this.Book.find(filter);
@@ -47,6 +51,9 @@ class BookService{
         });
     }
     async update(id, payload) {
+        const nxbService = new NXBService(MongoDB.client);
+        const document = await nxbService.findByName(payload.MaNXB);
+        if(!document.length) return {errCode:404,message:"nxb is not exist"};
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
