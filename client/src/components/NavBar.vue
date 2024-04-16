@@ -6,10 +6,15 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="appNavbar">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <router-link :to = "{name:'home'}" class="nav-link active" aria-current="page">Home</router-link>
+      <ul  class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li v-if="isStaff" class="nav-item">
+          <router-link :to = "{name:'admin'}" class="nav-link active" aria-current="page">Admin</router-link>
         </li>
+        <template v-else>
+            <li  class="nav-item">
+              <router-link :to = "{name:'home'}" class="nav-link active" aria-current="page">Home</router-link>
+            </li>
+        </template>
       </ul>
       <ul class="navbar-nav mx-2 mb-2 mb-lg-0">
         <li v-if="isAuthenticated" class="nav-item dropdown">
@@ -48,7 +53,11 @@
         return authStore.userDetail
     })
     const isAuthenticated = computed(()=>{
+      console.log(authStore.isAuthenticated)
       return authStore.isAuthenticated
+    })
+    const isStaff = computed(()=>{
+      return authStore.isStaff
     })
     console.log(user)
     async function logout() {

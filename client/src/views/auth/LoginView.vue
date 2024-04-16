@@ -37,10 +37,9 @@
     })
     const errorMessage = ref<string>("")
     async function submit(){
-        console.log(loginData)
         await authStore.login(loginData)
         .then(res =>{
-            router.replace({name:"user"})
+            router.replace({name:"admin"})
         })
         .catch(err=>{
             errorMessage.value = err.message

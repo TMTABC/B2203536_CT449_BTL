@@ -9,6 +9,15 @@ export interface User{
     ChucVu:String,
     DiaChi:String
 }
+export interface Reader{
+    MaDocGia:String,
+    HoLot:String,
+    Ten:String,
+    NgaySinh:String,
+    Phai:String,
+    DiaChi:String,
+    DienThoai:String
+}
 
 export interface State{
     user:User
@@ -39,7 +48,8 @@ export const useAuthStore = defineStore('auth', {
     },
     getters:{
         userDetail:(state:State)=>state.user,
-        isAuthenticated: (state:State) => state.user?.id? true:false
+        isAuthenticated: (state:State) => state.user?.id? true:false,
+        isStaff: (state:State) => state.user?.ChucVu? true:false
     },
     actions:{
         async attempt(){
@@ -54,6 +64,7 @@ export const useAuthStore = defineStore('auth', {
         async login(payload :LoginData){
             try{
                 const {data} = await useApi().post(`/api/auth/login`,payload);
+                console.log(data)
                 this.accessToken=data?.access_token
                 await this.getUser()
                 return data
@@ -71,6 +82,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async getUser(){
             try{
+                console.log(this.user)
                 const {data} = await useApiPrivate().get(`/api/auth/user`);
                 this.user = data
                 return data
@@ -92,6 +104,7 @@ export const useAuthStore = defineStore('auth', {
             try{
                 const {data} = await useApiPrivate().post(`/api/auth/refresh`);
                 this.accessToken = data?.access_token
+                console.log(data)
                 return data
             }catch(error : Error | any){
                 throw error.response.message
