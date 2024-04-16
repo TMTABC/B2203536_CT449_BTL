@@ -13,4 +13,6 @@ router.route("/:id")
     .put(reader.update)
     .delete(reader.delete);
 
+router.route("/login")
+    .post(reader.login)
 module.exports = router;

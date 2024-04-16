@@ -63,5 +63,34 @@ class ReaderService{
         const result = await this.Reader.deleteMany({});
         return result.deletedCount;
     }
+    // async loginReader(data){
+    //     const {MaDocGia,password} = data
+    //     if(!MaDocGia||!password) return {erroCode:422,message:"Invalid fields"}
+    //     const reader = await this.findByName(MaDocGia); 
+    //     console.log("check",reader)
+    //     if(!reader) return {erroCode:404,message:"Not found user"}
+    // const accessToken = jwt.sign(
+    //     {
+    //         id : nhanVien.id
+    //     },
+    //     process.env.ACCESS_TOKEN_SECRET,
+    //     {
+    //         expiresIn:'1800s'
+    //     }
+    // )
+    // const refreshToken = jwt.sign(
+    //     {
+    //         id : nhanVien.id
+    //     },
+    //     process.env.ACCESS_TOKEN_SECRET,
+    //     {
+    //         expiresIn:'1800s'
+    //     }
+    // )
+    // nhanVien.refresh_token = refreshToken;
+    // await nhanVien.save()
+    // return {erroCode:200,access_token:accessToken}
+    //     return {errCode:200,message:reader}
+    // }
 }
 module.exports = ReaderService;

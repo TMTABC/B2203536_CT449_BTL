@@ -10,7 +10,20 @@ const connectDB = require("./app/config/database")
 const credentials = require("./app/middleware/credentials")
 const errorHandlerMiddleware = require('./app/middleware/error_handler')
 const authentication = require('./app/middleware/authentication');
-const MongoDB = require("./app/utils/mongo");
+const multer  = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const path = require('path');
+        cb(null, path.join(__dirname, '/uploads'))
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
+//const upload = multer({dest:'uploads/'})
+const upload = multer({storage})
+
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -34,6 +47,10 @@ app.use('/static',express.static(path.join(__dirname,'public')))
 app.use(errorHandlerMiddleware);
 app.use(authentication);
 
+
+app.post('/api/upload',upload.single('file'),(req,res)=>{
+    res.json(req.file)
+})
 // routes
 app.use('/api/auth',require("./app/routes/api/auth"))
 app.use('/api/nxb',require("./app/routes/api/nxb"))

@@ -92,3 +92,14 @@ exports.deleteAll = async(req,res,next)=>{
         return next(new ApiError(500,`An error occurred while removing all reader`))
     }
 }
+
+exports.login = async(req,res,next)=>{
+    try{
+        const readerService = new ReaderService(MongoDB.client);
+        const document = await readerService.loginReader(req.body);
+        //res.cookie('refresh_token',document.access_token,{httpOnly:true,maxAge:24*60*60*1000});
+        return res.status(document.errCode).json(document);
+    }catch(err){
+        return next(new ApiError(500,`An error occurred while login reader`))
+    }
+}

@@ -28,10 +28,10 @@ const loginUser=async(data)=>{
     //res.status(422).json({"message":"Invalid fields"})
     const nhanVien = await NhanVien.findOne({MSNV}).exec(); 
 
-    if(!nhanVien) return {erroCode:401,message:"Not found user"}
+    if(!nhanVien) return {erroCode:404,message:"Not found user"}
     //res.status(401)
     const match = await bcrypt.compare(password, nhanVien.password)
-    if(!match) return {erroCode:401,message:"Email or password incorrect"}
+    if(!match) return {erroCode:400,message:"Email or password incorrect"}
     //res.status(401).json({message:"Email or password incorrect"})
     
     const accessToken = jwt.sign(

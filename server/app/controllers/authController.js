@@ -39,7 +39,7 @@ const refresh = async(req,res)=>{
         refereshToken,
         process.env.ACCESS_TOKEN_SECRET,
         (err,decoded)=>{
-            if(err|| nhanVien.id !== decoded.id) return res.sendStatus(403)
+            if(err|| nhanVien.id !== decoded.id) return res.sendStatus(402)
             
             const accessToken = jwt.sign(
                 {id:decoded.id},
