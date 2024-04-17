@@ -3,7 +3,7 @@
 
 <template>
   <div id="admin">
-    <button @click="reader">Đọc giả</button>
+    <button @click="reader">Độc giả</button>
     <button @click="nxb">Nhà xuất bản</button>
     <button @click="book">Sách</button>
     <button @click="followBook">Mượn sách</button>

@@ -26,12 +26,10 @@ export const useReaderStore = defineStore('reader', {
         return{
             user:{} as Reader,
             accessToken: "" as string,
-            listReader:[] as Reader,
         }
     },
     getters:{
         userDetail:(state:State)=>state.user,
-        listReaderData:(state:State)=>state.listReader
     },
     actions:{
         
@@ -46,8 +44,8 @@ export const useReaderStore = defineStore('reader', {
         },
         async getReader(payload:Reader){
             try{
-                const {data} = await useApi().get(`/api/reader`)
-                this.listReader = data;
+                const {data} = await useApi().get(`/api/reader`,payload)
+                console.log("data ",data)
                 return data
             }catch(error : Error | any){
                 throw error.message
