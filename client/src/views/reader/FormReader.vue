@@ -22,9 +22,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="ngaySinh" class="form-label">Ngày sinh:</label>
-                    <input v-model="readerData.NgaySinh" type="text" class="form-control" id="ngaySinh" autocomplete="off">
-                    <label for="example-datepicker">Choose a date</label>
-                    
+                    <input v-model="readerData.NgaySinh" type="date" class="form-control" id="ngaySinh" autocomplete="off">
                 </div>
                 <div class="mb-3">
                     <label for="phai" class="form-label">Phái:</label>

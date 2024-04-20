@@ -1,57 +1,86 @@
 <template>
   <div id="reader">
-    <button @click="createReader">Tạo độc giả</button>
+    <v-btn @click="createReader">Tạo độc giả</v-btn>
     <div class="table-reader">
-      <DataTable 
-              selectionMode="single" 
-              dataKey="MaDocGia" 
-              :value="dataReader" 
-              @row-click="getDataIndex"
-              tableStyle="min-width: 50rem" >
-        <Column field="MaDocGia" header="Mã độc giả"></Column>
-        <Column field="Ten" header="Tên"></Column>
-        <Column field="DienThoai" header="Điện thoại"></Column>
-        <Column field="DiaChi" header="Địa chỉ"></Column>
-        <!-- <Column  v-for="col of dataReader" :key="col.field" :field="col.field" :header="col.header"></Column> -->
-      </DataTable>
-    </div>
-    <data v-if="selectedData"><DetailView :data="selectedData.data"></DetailView></data>
-    <div>
-      <Listbox v-model="dataReader" :options="dataReader" filter optionLabel="MaDocGia" class="w-full md:w-14rem" />
-    </div>
+      <v-card
+    title="Độc giả"
+    flat
+  >
+    <template v-slot:text>
+      <v-text-field
+        v-model="search"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        hide-details
+        single-line
+      ></v-text-field>
+    </template>
+
+    <v-data-table
+    v-model="selected"
+    show-select
+      :headers="headers"
+      :items="dataReader"
+      :search="search"
+      item-value="MaDocGia"
+    return-object
+    select-strategy="single"
+    ></v-data-table>
+  </v-card>
+</div>
+<div ><DetailView :data=selected></DetailView></div>
   </div>
 </template>
 
-<script setup>
-    import { reactive,ref,computed, onMounted  } from "vue";
-    import DataTable from 'primevue/datatable';
-    import Column from 'primevue/column';
-    import Listbox from 'primevue/listbox';
-    import { useReaderStore } from "../../stores/reader";
-    import { useRouter } from "vue-router";
-    import DetailView from "../../components/DetailView.vue"
+<script>
+   import { ref, onMounted } from "vue";
+import { useReaderStore } from "../../stores/reader";
+import { useRouter } from "vue-router";
+import DetailView from "../../components/DetailView.vue"
 
+export default {
+  components:{
+    DetailView
+  },
+  setup() {
     const router = useRouter();
-    async function createReader(){
-        router.replace({name:"createReader"})
-    }
 
-    const selectedData = ref(null)
-    const getDataIndex =  async(event)=>{
-      selectedData.value=event
-      console.log(typeof(event))
-      console.log("select ",selectedData)
-      //getData()
-    }
-    const getData=()=>{
-      console.log("data reader",dataReader[selectedData])
-    }
+    const headers = [
+      {
+        align: 'start',
+        key: 'MaDocGia',
+        sortable: false,
+        title: 'Mã độc giả',
+      },
+      { key: 'Ten', title: 'Tên' },
+      { key: 'DiaChi', title: 'Địa chỉ' },
+      { key: 'DienThoai', title: 'Điện thoại' }
+    ];
+    const selectedData = ref();
+    const search = ref();
     const dataReader = ref();
     const readerStore = useReaderStore();
-    onMounted(async()=>{
-      const readerData = await readerStore.getReader().then((data)=>(dataReader.value=data));
-      return readerData
-    })
+
+    onMounted(async () => {
+      const readerData = await readerStore.getReader().then((data) => (dataReader.value = data));
+      return readerData;
+    });
+
+    const createReader = async () => {
+      router.replace({ name: "createReader" });
+    }
+    return {
+      headers,
+      search,
+      selected:selectedData,
+      dataReader,
+      createReader,
+      DetailView
+    };
+  }
+}
+
 </script>
 
 <style scoped>

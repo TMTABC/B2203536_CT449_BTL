@@ -3,17 +3,21 @@
 
 <template>
   <div id="admin">
-    <button @click="reader">Độc giả</button>
-    <button @click="nxb">Nhà xuất bản</button>
-    <button @click="book">Sách</button>
-    <button @click="followBook">Mượn sách</button>
+    <v-btn @click="reader">Độc giả</v-btn>
+    <v-btn @click="nxb">Nhà xuất bản</v-btn>
+    <v-btn @click="book">Sách</v-btn>
+    <v-btn @click="followBook">Mượn sách</v-btn>
+  </div>
+  <div>
+    <FollowBookView></FollowBookView>
   </div>
 </template>
 
 <script setup lang="ts">
     import { reactive,ref } from "vue";
-    
+    import FollowBookView from "../followBook/FollowBookView.vue"
     import { useRouter } from "vue-router";
+
     const router = useRouter();
     async function reader(){
         router.replace({name:"reader"})
@@ -25,7 +29,7 @@
         router.replace({name:"book"})
     }
     async function followBook(){
-        router.replace({name:"followBook"})
+        router.replace({name:"borrow"})
     }
 </script>
 

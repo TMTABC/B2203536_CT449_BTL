@@ -26,7 +26,7 @@ class BookService{
         const document = await nxbService.findByName(payload.MaNXB);
         const bookExist = new BookService(MongoDB.client);
         const isExist = await bookExist.findByName(payload.MaSach);
-        if(isExist) return {errCode:400,message:"ma sach is exist"}
+        if(isExist[0]) return {errCode:400,message:"ma sach is exist"}
         if(!document.length) return {errCode:404,message:"nxb is not exist"};
         else{
             const result = await this.Book.findOneAndUpdate(

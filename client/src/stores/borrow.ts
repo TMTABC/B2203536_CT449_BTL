@@ -1,31 +1,22 @@
 import {defineStore} from 'pinia'
 import {useApi,useApiPrivate} from '@/composables/useApi'
 
-export interface Reader{
+export interface Borrow{
+    MaSach:String,
     MaDocGia:String,
-    HoLot:String,
-    Ten:String,
-    NgaySinh:String,
-    Phai:String,
-    DiaChi:String,
-    DienThoai:String
+    NgayMuon:String,
+    NgayTra:String,
+    DaTra:String
 }
 
 export interface State{
-    user:Reader
-    accessToken:string
+    user:Borrow
 }
 
-export interface LoginData{
-    MSNV:String
-    password : String
-}
-
-export const useReaderStore = defineStore('reader', {
+export const useBorrowStore = defineStore('followBook', {
     state:() : State =>{
         return{
-            user:{} as Reader,
-            accessToken: "" as string,
+            user:{} as Borrow,
         }
     },
     getters:{
@@ -33,36 +24,43 @@ export const useReaderStore = defineStore('reader', {
     },
     actions:{
         
-        async createReader(payload:Reader){
+        async createBorrow(payload:Borrow){
             try{
-                console.log(payload)
-                const {data} = await useApi().post(`/api/reader`,payload)
+                const {data} = await useApi().post(`/api/followBook`,payload)
                 return data
             }catch(error : Error | any){
                 throw error.message
             }
         },
-        async getReader(payload:Reader){
+        async getBorrow(payload:Borrow){
             try{
-                const {data} = await useApi().get(`/api/reader`,payload)
+                const {data} = await useApi().get(`/api/followBook`,payload)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
+        async updateBorrow(_id:any,payload:Borrow){
+            try{
+                const {data} = await useApi().put(`/api/followBook/${_id}`,payload)
                 console.log("data ",data)
                 return data
             }catch(error : Error | any){
                 throw error.message
             }
         },
-        async updateReader(_id:any,payload:Reader){
+        async delete(_id:any){
             try{
-                const {data} = await useApi().put(`/api/reader/${_id}`,payload)
+                const {data} = await useApi().delete(`/api/followBook/${_id}`)
                 console.log("data ",data)
                 return data
             }catch(error : Error | any){
                 throw error.message
             }
         },
-        async deleteReader(_id:any){
+        async borrow(_id:any){
             try{
-                const {data} = await useApi().delete(`/api/reader/${_id}`)
+                const {data} = await useApi().put(`/api/followBook/${_id}`)
                 console.log("data ",data)
                 return data
             }catch(error : Error | any){

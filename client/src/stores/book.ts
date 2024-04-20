@@ -1,31 +1,24 @@
 import {defineStore} from 'pinia'
-import {useApi,useApiPrivate} from '@/composables/useApi'
+import {useApi} from '@/composables/useApi'
 
-export interface Reader{
-    MaDocGia:String,
-    HoLot:String,
-    Ten:String,
-    NgaySinh:String,
-    Phai:String,
-    DiaChi:String,
-    DienThoai:String
+export interface Book{
+    MaSach:String,
+  TenSach:String,
+  DonGia:String,
+  SoQuyen:String,
+  NamXuatBan:String,
+  MaNXB:String,
+	TacGia:String
 }
 
 export interface State{
-    user:Reader
-    accessToken:string
+    user:Book
 }
 
-export interface LoginData{
-    MSNV:String
-    password : String
-}
-
-export const useReaderStore = defineStore('reader', {
+export const useBookStore = defineStore('book', {
     state:() : State =>{
         return{
-            user:{} as Reader,
-            accessToken: "" as string,
+            user:{} as Book,
         }
     },
     getters:{
@@ -33,15 +26,41 @@ export const useReaderStore = defineStore('reader', {
     },
     actions:{
         
-        async createReader(payload:Reader){
+        async createBook(payload:Book){
             try{
                 console.log(payload)
-                const {data} = await useApi().post(`/api/reader`,payload)
+                const {data} = await useApi().post(`/api/book`,payload)
                 return data
             }catch(error : Error | any){
                 throw error.message
             }
         },
-        
+        async getBook(payload:Book){
+            try{
+                const {data} = await useApi().get(`/api/book`,payload)
+                console.log("data ",data)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
+        async updateBook(_id:any,payload:Book){
+            try{
+                const {data} = await useApi().put(`/api/book/${_id}`,payload)
+                console.log("data ",data)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
+        async deleteBook(_id:any){
+            try{
+                const {data} = await useApi().delete(`/api/book/${_id}`)
+                console.log("data ",data)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
     }
 })

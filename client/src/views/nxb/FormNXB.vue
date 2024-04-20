@@ -2,42 +2,23 @@
 </script>
 
 <template>
-  <div id="createReader">
+  <div id="createNXB">
     <div class="container">
         <div class="card card-body my-4">
-            <h5 class="card-title">Tạo người đọc mới</h5>
+            <h5 class="card-title">Tạo nhà xuất bản mới</h5>
             <form @submit.prevent="submit">
                 <p v-if="errorMessage" class="error-message text-danger mb-4">{{ errorMessage }}</p>
                 <div class="mb-3">
-                    <label for="ma" class="form-label">Mã độc giả:</label>
-                    <input v-model="readerData.MaDocGia" type="text" class="form-control" id="maDocGia" autocomplete="off">
+                    <label for="ma" class="form-label">Mã nhà xuất bản:</label>
+                    <input v-model="nxbData.maNXB" type="text" class="form-control" id="maDocGia" autocomplete="off">
                 </div>
                 <div class="mb-3">
-                    <label for="ho" class="form-label">Họ Lót:</label>
-                    <input v-model="readerData.HoLot" type="text" class="form-control" id="hoLot" autocomplete="off">
+                    <label for="ho" class="form-label">Tên nhà xuất bản:</label>
+                    <input v-model="nxbData.nameNXB" type="text" class="form-control" id="hoLot" autocomplete="off">
                 </div>
                 <div class="mb-3">
-                    <label for="ten" class="form-label">Tên:</label>
-                    <input v-model="readerData.Ten" type="text" class="form-control" id="ten" autocomplete="off">
-                </div>
-                <div class="mb-3">
-                    <label for="ngaySinh" class="form-label">Ngày sinh:</label>
-                    <input v-model="readerData.NgaySinh" type="text" class="form-control" id="ngaySinh" autocomplete="off">
-                    <label for="example-datepicker">Choose a date</label>
-                    <b-form-datepicker id="example-datepicker" v-model="value" class="mb-2"></b-form-datepicker>
-                    <p>Value: '{{ value }}'</p>
-                </div>
-                <div class="mb-3">
-                    <label for="phai" class="form-label">Phái:</label>
-                    <input v-model="readerData.Phai" type="text" class="form-control" id="phai" autocomplete="off">
-                </div>
-                <div class="mb-3">
-                    <label for="diaChi" class="form-label">Địa chỉ:</label>
-                    <input v-model="readerData.DiaChi" type="text" class="form-control" id="diaChi" autocomplete="off">
-                </div>
-                <div class="mb-3">
-                    <label for="ma" class="form-label">Điện thoại:</label>
-                    <input v-model="readerData.DienThoai" type="text" class="form-control" id="dienThoai" autocomplete="off">
+                    <label for="ten" class="form-label">Địa chỉ nhà xuất bản:</label>
+                    <input v-model="nxbData.addressNXB" type="text" class="form-control" id="ten" autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-success">Tạo</button>
             </form>
@@ -48,31 +29,22 @@
 
 <script setup lang="ts">
     import { reactive,ref } from "vue";
-    import { useReaderStore, type Reader } from '../../stores/reader';
+    import { useNXBStore, type NXB } from '../../stores/nxb';
     import { useRouter } from "vue-router";
 
-    const readerStore = useReaderStore();
-    // const authStore = useAuthStore();
+    const nxbStore = useNXBStore();
     const router = useRouter();
-    const readerData = reactive<Reader>({
-        MaDocGia:"",
-        HoLot:"",
-        Ten:"",
-        NgaySinh:"",
-        Phai:"",
-        DiaChi:"",
-        DienThoai:"",
+    const nxbData = reactive<NXB>({
+        maNXB:"",
+	nameNXB: "",
+	addressNXB: ""
     })
-    // const loginData = reactive<LoginData>({
-    //     MSNV:"",
-    //     password : "",
-    // })
     const errorMessage = ref<string>("")
     async function submit(){
-        console.log(readerData);
-        await readerStore.createReader(readerData)
+        console.log(nxbData);
+        await nxbStore.createNXB(nxbData)
         .then(res =>{
-            router.replace({name:"admin"})
+            router.replace({name:"nxb"})
         })
         .catch(err=>{
             errorMessage.value = err.message
@@ -81,7 +53,7 @@
 </script>
 
 <style scoped>
-    #createReader .card{
+    #createNXB .card{
         max-width: 40vw;
         margin: auto
     }

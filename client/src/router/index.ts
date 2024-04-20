@@ -1,4 +1,3 @@
-import  FormBook  from '@/views/books/FormBook.vue';
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/auth/LoginView.vue'
@@ -9,6 +8,10 @@ import AdminView from '@/views/auth/AdminView.vue'
 import FormReader from '@/views/reader/FormReader.vue'
 import ReaderView from '@/views/reader/ReaderView.vue'
 import  BookView  from '@/views/books/BookView.vue'
+import FormBook from '@/views/books/FormBook.vue';
+import NXBView from '@/views/nxb/NXBView.vue';
+import FormNXB from '@/views/nxb/FormNXB.vue';
+import FormFollowBook from '@/views/followBook/FormFollowBook.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +29,12 @@ const router = createRouter({
     {
       path:'/admin/nxb',
       name:'nxb',
-      component: FormReader
+      component: NXBView
+    },
+    {
+      path:'/admin/nxb/createNXB',
+      name:'createNXB',
+      component: FormNXB
     },
     {
       path:'/admin/reader',
@@ -52,6 +60,11 @@ const router = createRouter({
       path:'/admin/book/createBook',
       name:'createBook',
       component: FormBook
+    },
+    {
+      path:'/admin/book/borrow',
+      name:'borrow',
+      component: FormFollowBook
     },
     {
       path: '/login',

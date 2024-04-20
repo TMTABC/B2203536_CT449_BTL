@@ -98,7 +98,7 @@ exports.giveBookBack = async(req,res,next)=>{
         if(!document){
             return next(new ApiError(404,"book not found"));
         }
-        res.send({message: "give book back successfully"});
+        return res.status(document.errCode).send(document.message);
     }catch(err){
         return next(new ApiError(500,`Error give book back with id=${req.params.id}`))
     };

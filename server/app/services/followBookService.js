@@ -7,12 +7,15 @@ class FollowBookService{
         this.FollowBook = client.db().collection("followBook");
     }
     extractFollowBookData(payload){
+        const today = new Date(); 
+        const nextweek = new Date();
+        nextweek.setDate(today.getDate() + 7)
        const followBook = {
            MaDocGia:payload.MaDocGia,
            MaSach:payload.MaSach,
-           NgayMuon:payload.NgayMuon,
-           NgayTra:payload.NgayTra,
-           DaTra:false
+           NgayMuon:today,
+           NgayTra:nextweek,
+           DaTra:payload.DaTra
        };
        Object.keys(followBook).forEach(
            (key)=>followBook[key] === undefined && delete followBook[key]
@@ -82,15 +85,29 @@ class FollowBookService{
         const followBook = await followBookService.findById(id);
         const bookService = new BookService(MongoDB.client);
         const bookExist = await bookService.findByName(followBook.MaSach);
-        await bookService.update(bookExist[0]._id,{SoQuyen:bookExist[0].SoQuyen+1})
-        if(followBook.DaTra==false)
-        {await this.FollowBook.findOneAndUpdate(
-            followBook,
-            {$set:{DaTra:true}},
-            {returnDocument:"after",upsert:true}
-        )
-        return {errCode:200,message:"give book success"};}
-        
+    
+        if(bookExist.length > 0 && followBook.DaTra=="Đang mượn") {
+            const currentDate = new Date();
+            await bookService.update(bookExist[0]._id, {SoQuyen: bookExist[0].SoQuyen + 1});
+            if(currentDate > followBook.NgayTra) {
+                await this.FollowBook.findOneAndUpdate(
+                    followBook,
+                    {$set: {DaTra: "Quá hạn"}},
+                    {returnDocument: "after", upsert: true}
+                    );
+                    return {errCode: 200, message: "Ngày hiện tại vượt qua Ngày trả"};
+                } else {
+                    await this.FollowBook.findOneAndUpdate(
+                        followBook,
+                        {$set: {DaTra: "Đã trả",NgayTra:currentDate}},
+                        {returnDocument: "after", upsert: true}
+                    );
+                return {errCode: 200, message: "give book success"};
+            }
+        } else {
+            return {errCode: 400, message: "Sách không tồn tại hoặc đã được trả"};
+        }
     }
+    
 }
 module.exports = FollowBookService;

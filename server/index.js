@@ -49,8 +49,15 @@ app.use(authentication);
 
 
 app.post('/api/upload',upload.single('file'),(req,res)=>{
-    res.json(req.file)
+    const file = req.file
+    if (!file) {
+      const error = new Error('Please upload a file')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+    res.send(file)
 })
+  
 // routes
 app.use('/api/auth',require("./app/routes/api/auth"))
 app.use('/api/nxb',require("./app/routes/api/nxb"))
