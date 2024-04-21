@@ -77,6 +77,7 @@ import { useBorrowStore } from "../stores/borrow";
        methods: {
            borrow : async(data)=>{
                const doc = await useBorrowStore().borrow(data._id)
+               alert("Mượn thành công")
                location.reload(); 
            },
            async getData(){

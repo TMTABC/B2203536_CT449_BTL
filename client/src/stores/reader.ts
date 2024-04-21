@@ -17,7 +17,7 @@ export interface State{
 }
 
 export interface LoginData{
-    MSNV:String
+    MaDocGia:String
     password : String
 }
 
@@ -32,16 +32,6 @@ export const useReaderStore = defineStore('reader', {
         userDetail:(state:State)=>state.user,
     },
     actions:{
-        
-        async createReader(payload:Reader){
-            try{
-                console.log(payload)
-                const {data} = await useApi().post(`/api/reader`,payload)
-                return data
-            }catch(error : Error | any){
-                throw error.message
-            }
-        },
         async getReader(payload:Reader){
             try{
                 const {data} = await useApi().get(`/api/reader`,payload)
@@ -51,6 +41,25 @@ export const useReaderStore = defineStore('reader', {
                 throw error.message
             }
         },
+        async login(payload:LoginData){
+            try{
+                const {data} = await useApi().post(`/api/reader/login`,payload);
+                console.log(data)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
+        async createReader(payload:Reader){
+            try{
+                console.log(payload);
+                const {data} = await useApi().post(`/api/reader`,payload)
+                return data
+            }catch(error : Error | any){
+                throw error.message
+            }
+        },
+        
         async updateReader(_id:any,payload:Reader){
             try{
                 const {data} = await useApi().put(`/api/reader/${_id}`,payload)

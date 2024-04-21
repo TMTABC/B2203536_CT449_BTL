@@ -58,6 +58,7 @@
                 borrowData.value.MaSach=props.data[0].MaSach
               const doc = await borrowStore.createBorrow(borrowData.value)     
               .then(res => {
+                        alert("Mượn thành công")
                         location.reload(); 
                   })
                   .catch(err => {

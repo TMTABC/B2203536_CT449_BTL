@@ -22,7 +22,6 @@ exports.findAll = async(req,res,next)=>{
     try{
         const readerService = new ReaderService(MongoDB.client);
         const {MaDocGia} =req.query;
-        console.log(MaDocGia);
         if(MaDocGia){
             documents = await readerService.findByName(MaDocGia);
         }else{

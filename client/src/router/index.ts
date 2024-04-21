@@ -12,6 +12,7 @@ import FormBook from '@/views/books/FormBook.vue';
 import NXBView from '@/views/nxb/NXBView.vue';
 import FormNXB from '@/views/nxb/FormNXB.vue';
 import FormFollowBook from '@/views/followBook/FormFollowBook.vue';
+import LoginReaderView from '@/views/reader/LoginReaderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,6 +71,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      meta:{requiresGuest:true}
+    },
+    {
+      path: '/loginReader',
+      name: 'loginReader',
+      component: LoginReaderView,
       meta:{requiresGuest:true}
     },
     {

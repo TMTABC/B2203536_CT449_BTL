@@ -56,6 +56,7 @@
         { key: 'TenSach', title: 'Tên sách' },
         { key: 'DonGia', title: 'Đơn giá' },
         { key: 'SoQuyen', title: 'Số quyển' },
+        { key: 'MaNXB', title: 'Mã nhà xuất bản' },
         { key: 'NamXuatBan', title: 'Năm xuất bản' },
         { key: 'TacGia', title: 'Tác giả' },
       ];

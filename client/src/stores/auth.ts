@@ -9,15 +9,6 @@ export interface User{
     ChucVu:String,
     DiaChi:String
 }
-export interface Reader{
-    MaDocGia:String,
-    HoLot:String,
-    Ten:String,
-    NgaySinh:String,
-    Phai:String,
-    DiaChi:String,
-    DienThoai:String
-}
 
 export interface State{
     user:User
@@ -102,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async refresh(){
             try{
-                const {data} = await useApiPrivate().post(`/api/auth/refresh`);
+                //const {data} = await useApiPrivate().post(`/api/auth/refresh`);
                 this.accessToken = data?.access_token
                 console.log(data)
                 return data

@@ -76,7 +76,7 @@ export default {
         const errorMessage = ref("");
 
         const submit = async () => {
-            console.log(bookData.value);
+            console.log("dafgsdfg",bookData.value);
             await bookStore.createBook(bookData.value)
                 .then(res => {
                     router.replace({ name: "book" });

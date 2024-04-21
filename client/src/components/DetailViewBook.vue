@@ -3,24 +3,37 @@
     <v-sheet v-if="data" class="mx-auto" width="300">
 <v-form ref="form">
  <v-text-field
-   v-model="data[0].maNXB"
+   v-model="data[0].MaSach"
    :rules="nameRules"
    :counter="8"
-   label="Mã nhà xuất bản"
+   label="Mã sách"
    required
  ></v-text-field>
  <v-text-field
-   v-model="data[0].nameNXB"
+   v-model="data[0].TenSach"
    :rules="otherRules"
-   label="Tên nhà xuất bản"
+   label="Tên sách"
    required
  ></v-text-field>
  <v-text-field
-   v-model="data[0].addressNXB"
+   v-model="data[0].DonGia"
    :rules="otherRules"
-   label="Địa chỉ nhà xuất bản"
+   label="Đơn giá"
    required
  ></v-text-field>
+ <v-text-field
+   v-model="data[0].TacGia"
+   :rules="otherRules"
+   label="Tác giả"
+   required
+ ></v-text-field>
+ <v-text-field
+   v-model="data[0].N"
+   :rules="otherRules"
+   label="Đơn giá"
+   required
+ ></v-text-field>
+ 
  <div class="d-flex flex-column">
    <v-btn
      class="mt-4"

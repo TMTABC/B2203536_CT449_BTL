@@ -29,7 +29,7 @@ class NXBService{
         }
     async findByName(name) {
         return await this.find({
-           nameNXB: { $regex: new RegExp(name), $options: "i" },
+           maNXB: { $regex: new RegExp(name), $options: "i" },
         });
     }
     async findById(id) {

@@ -1,18 +1,18 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
-    <router-link class="navbar-brand" :to="{name:'home'}">Navbar</router-link>
+    <router-link class="navbar-brand" :to="{name:'home'}">Điều hướng</router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar" aria-controls="appNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="appNavbar">
       <ul  class="navbar-nav me-auto mb-2 mb-lg-0">
         <li v-if="isStaff" class="nav-item">
-          <router-link :to = "{name:'admin'}" class="nav-link active" aria-current="page">Admin</router-link>
+          <router-link :to = "{name:'admin'}" class="nav-link active" aria-current="page">Nhân viên</router-link>
         </li>
         <template v-else>
             <li  class="nav-item">
-              <router-link :to = "{name:'home'}" class="nav-link active" aria-current="page">Home</router-link>
+              <router-link :to = "{name:'home'}" class="nav-link active" aria-current="page">Trang chủ</router-link>
             </li>
         </template>
       </ul>
@@ -22,17 +22,21 @@
             {{ user.MSNV }}
           </a>
           <ul class="dropdown-menu">
-              <li><router-link :to="{name : 'user'}" class="dropdown-item">Profile</router-link></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><button @click="logout" class="dropdown-item btn btn-danger">Logout</button></li>
-            </ul>
+            <li><router-link :to="{name : 'user'}" class="dropdown-item">Thông tin</router-link></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button @click="logout" class="dropdown-item btn btn-danger">Đăng xuất</button></li>
+            <li><hr class="dropdown-divider"></li>
+          </ul>
         </li>
         <template v-else>
           <li class="nav-item">
-            <router-link :to = "{name:'login'}" class="nav-link active" aria-current="page">Login</router-link>
+            <router-link :to = "{name:'login'}" class="nav-link active" aria-current="page">Đăng nhập</router-link>
           </li>
           <li class="nav-item">
-            <router-link :to = "{name:'register'}" class="nav-link active" aria-current="page">Register</router-link>
+            <router-link :to = "{name:'loginReader'}" class="nav-link active" aria-current="page">Đăng nhập độc giả</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{name:'register'}" class="nav-link active">Thêm nhân viên</router-link>
           </li>
         </template>
       </ul>
