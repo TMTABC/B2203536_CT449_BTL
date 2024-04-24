@@ -81,7 +81,7 @@ import { useBorrowStore } from "../stores/borrow";
                location.reload(); 
            },
            async getData(){
-               console.log("Check data",this.data)
+               
            },
            async validate () {
        const { valid } = await this.$refs.form.validate()

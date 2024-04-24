@@ -30,6 +30,7 @@ export const useReaderStore = defineStore('reader', {
     },
     getters:{
         userDetail:(state:State)=>state.user,
+        isReader:(state:State) => state.user?.MaDocGia? true:false,
     },
     actions:{
         async getReader(payload:Reader){
@@ -41,13 +42,39 @@ export const useReaderStore = defineStore('reader', {
                 throw error.message
             }
         },
+        async getReaderLogin(){
+            console.log("user",this.userDetail);
+            return this.userDetail
+        },
         async login(payload:LoginData){
             try{
-                const {data} = await useApi().post(`/api/reader/login`,payload);
-                console.log(data)
+                const {data} = await useApiPrivate().post(`/api/reader/login`,payload);
+                console.log("asd",data.data)
+                this.user= data.data
+                this.accessToken=data?.access_token
                 return data
             }catch(error : Error | any){
                 throw error.message
+            }
+        },
+        async logout(){
+            try{
+                const {data} = await useApi().post(`/api/auth/logout`);
+                this.accessToken = ''
+                this.user = {} as Reader
+                return data
+            }catch(error : Error | any){
+                throw error.response.message
+            }
+        },
+        async refresh(){
+            try{
+                const {data} = await useApiPrivate().post(`/api/auth/refresh`);
+                this.accessToken = data?.access_token
+                console.log(data)
+                return data
+            }catch(error : Error | any){
+                throw error.response.message
             }
         },
         async createReader(payload:Reader){

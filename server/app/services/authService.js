@@ -27,7 +27,6 @@ const loginUser=async(data)=>{
     if(!MSNV||!password) return {erroCode:422,message:"Invalid fields"}
     //res.status(422).json({"message":"Invalid fields"})
     const nhanVien = await NhanVien.findOne({MSNV}).exec(); 
-
     if(!nhanVien) return {erroCode:404,message:"Not found user"}
     //res.status(401)
     const match = await bcrypt.compare(password, nhanVien.password)
@@ -43,6 +42,7 @@ const loginUser=async(data)=>{
             expiresIn:'1800s'
         }
     )
+    console.log(accessToken)
     const refreshToken = jwt.sign(
         {
             id : nhanVien.id

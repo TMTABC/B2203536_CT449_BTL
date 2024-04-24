@@ -29,15 +29,28 @@
           </ul>
         </li>
         <template v-else>
-          <li class="nav-item">
-            <router-link :to = "{name:'login'}" class="nav-link active" aria-current="page">Đăng nhập</router-link>
+          <li v-if="isReader" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ reader.MaDocGia }}
+            </a>
+            <ul class="dropdown-menu">
+              <li><router-link :to="{name : 'user'}" class="dropdown-item">Thông tin</router-link></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button @click="logout" class="dropdown-item btn btn-danger">Đăng xuất</button></li>
+              <li><hr class="dropdown-divider"></li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <router-link :to = "{name:'loginReader'}" class="nav-link active" aria-current="page">Đăng nhập độc giả</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link :to="{name:'register'}" class="nav-link active">Thêm nhân viên</router-link>
-          </li>
+          <template v-else>
+            <li class="nav-item">
+              <router-link :to = "{name:'login'}" class="nav-link active" aria-current="page">Đăng nhập</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to = "{name:'loginReader'}" class="nav-link active" aria-current="page">Đăng nhập độc giả</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{name:'register'}" class="nav-link active">Thêm nhân viên</router-link>
+            </li>
+          </template>
         </template>
       </ul>
 
@@ -50,27 +63,44 @@
     import { computed, reactive,ref } from "vue";
     import { useAuthStore} from '../stores/auth';
     import { useRouter } from "vue-router";
+    import { useReaderStore, type LoginData } from '../stores/reader';
 
+    const readerStore = useReaderStore();
     const router = useRouter()
     const authStore = useAuthStore()
     const user = computed(()=>{
         return authStore.userDetail
     })
+    const reader = computed(()=>{
+        return readerStore.userDetail
+    })
     const isAuthenticated = computed(()=>{
       console.log(authStore.isAuthenticated)
       return authStore.isAuthenticated
+    })
+    const isReader = computed(()=>{
+      return readerStore.isReader
     })
     const isStaff = computed(()=>{
       return authStore.isStaff
     })
     console.log(user)
     async function logout() {
-      await authStore.logout().then(res=>{
-        router.replace({name:"home"})
-      })
-      .catch(err=>{
-        console.log(err)
-      })
+      if(authStore.isStaff){
+        await authStore.logout().then(res=>{
+          router.replace({name:"home"})
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+      }else {
+        await readerStore.logout().then(res=>{
+          router.replace({name:"home"})
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+      }
     }
 </script>
 <style>

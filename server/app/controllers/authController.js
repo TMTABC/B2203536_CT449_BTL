@@ -12,14 +12,15 @@ const register = async(req,res)=>{
 
 const login = async(req,res)=>{
     const document = await loginUser(req.body);
+    console.log(document)
     res.cookie('refresh_token',document.access_token,{httpOnly:true,maxAge:24*60*60*1000});
     return res.status(document.erroCode).json(document);
 }
 
 const logout = async(req,res)=>{
     const document = await logoutUser(req.cookies);
+    console.log(req.cookies);
     res.clearCookie('refresh_token',{httpOnly:true})
-    console.log(document);
     return res.status(document.erroCode).json(document);
 }
 const refresh = async(req,res)=>{

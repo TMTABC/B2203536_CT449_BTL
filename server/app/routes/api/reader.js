@@ -15,4 +15,15 @@ router.route("/:id")
 
 router.route("/login")
     .post(reader.login)
+
+router.route("/logout")
+.post(reader.logout)
+
+router.route("/refresh")
+.post(reader.refresh)
+
+router.route("/user")
+.get(reader.user)
+
+
 module.exports = router;

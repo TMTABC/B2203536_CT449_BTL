@@ -1,6 +1,7 @@
 const ApiError = require("../error");
 const ReaderService = require("../services/readerService");
 const MongoDB = require("../utils/mongo");
+const jwt = require("jsonwebtoken");
 
 exports.create = async(req,res,next)=>{
     console.log(req.body);
@@ -15,6 +16,11 @@ exports.create = async(req,res,next)=>{
         console.log(err)
         return next(new ApiError(500,"A error occurred while creating the reader"));
     };
+}
+exports.user = async(req,res)=>{
+    const user = req.user;
+    console.log("asd")
+    return res.status(200).json(user);
 }
 
 exports.findAll = async(req,res,next)=>{
@@ -65,7 +71,6 @@ exports.update = async(req,res,next)=>{
         return next(new ApiError(500,`Error updating reader with id=${req.body.MaDocGia}`))
     };
 }
-
 exports.delete = async(req,res,next)=>{
     try{
         const readerService = new ReaderService(MongoDB.client);
@@ -96,9 +101,52 @@ exports.login = async(req,res,next)=>{
     try{
         const readerService = new ReaderService(MongoDB.client);
         const document = await readerService.loginReader(req.body);
-        //res.cookie('refresh_token',document.access_token,{httpOnly:true,maxAge:24*60*60*1000});
-        return res.status(document.errCode).json(document);
+            res.cookie('refresh_token',document.access_token,{httpOnly:true,maxAge:24*60*60*1000});
+            return res.send(document);
     }catch(err){
-        return next(new ApiError(500,`An error occurred while login reader`))
+        return next(new ApiError(500,`An error occurred while login reader with ${err}`))
+    }
+}
+exports.logout = async(req,res,next)=>{
+    try{
+
+        const readerService = new ReaderService(MongoDB.client);
+        const document = await readerService.logoutUser(req.cookies); 
+        res.clearCookie('refresh_token',{httpOnly:true})
+        console.log(document);
+        return res.send(document);
+    }
+    catch(e){
+        return next(new ApiError(500,`An error occurred while logout reader with ${err}`))
+    }
+}
+exports.refresh=async(req,res,next)=>{
+    try{
+        const cookies = req.cookies;
+        if(!cookies.refresh_token) return res.send("user not login")
+
+        const refreshToken = cookies.refresh_token;
+        const readerService = new ReaderService(MongoDB.client);
+        const reader = await readerService.find({refresh_token: refreshToken});
+        if(!reader) {
+            res.send("not found reader")
+        }
+        jwt.verify(
+            refreshToken,
+            process.env.ACCESS_TOKEN_SECRET,
+            (err,decoded)=>{
+                if(err|| reader.id !== decoded.id) res.status(402)
+                
+                const accessToken = jwt.sign(
+                    {id:decoded.id},
+                    process.env.ACCESS_TOKEN_SECRET,
+                    {expiresIn:'1800s'}                
+                )
+                res.status(200).json({access_token:accessToken})
+            }
+        )
+    }
+    catch(err){
+        return next(new ApiError(500,`An error occurred while refresh reader with ${err}`))
     }
 }

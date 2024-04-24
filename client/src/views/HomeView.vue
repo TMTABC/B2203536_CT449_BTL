@@ -1,4 +1,17 @@
 <template>
+  <div id="reader">
+        <div class="container">
+            <div v-if="readerData" class="card card-body mt-4">
+                <h5 class="card-title">Mã độc giả : {{ readerData.MaDocGia }}</h5>
+                <h6 class="card-subtitle mt-2 text-muted">Họ Lót :{{ readerData.HoLot }}</h6>
+                <h6 class="card-subtitle mt-2 text-muted">Tên : {{ readerData.Ten }}</h6>
+                <h6 class="card-subtitle mt-2 text-muted">Phái : {{ readerData.Phai }}</h6>
+                <h6 class="card-subtitle mt-2 text-muted">Ngày sinh: {{ readerData.NgaySinh }}</h6>
+                <h6 class="card-subtitle mt-2 text-muted">Địa chỉ: {{ readerData.DiaChi }}</h6>
+                <h6 class="card-subtitle mt-2 text-muted">Số điện thoại : {{ readerData.DienThoai }}</h6>
+            </div>
+        </div>
+    </div>
   <div id="book">
     <div class="table-book">
       <v-card
@@ -35,16 +48,16 @@
 <script>
    import { ref, onMounted } from "vue";
 import { useBookStore } from "../stores/book";
+import { useReaderStore } from "@/stores/reader";
 import { useRouter } from "vue-router";
 import Borrow from "../components/Borrow.vue"
-
 export default {
   components:{
     Borrow
   },
   setup() {
     const router = useRouter();
-
+    
     const headers = [
       {
         align: 'start',
@@ -62,10 +75,11 @@ export default {
     const search = ref();
     const dataBook = ref();
     const bookStore = useBookStore();
+    const readerStore = useBookStore();
 
     onMounted(async () => {
       const bookData = await bookStore.getBook().then((data) => (dataBook.value = data));
-      return bookData;
+      return {bookData};
     });
 
     return {

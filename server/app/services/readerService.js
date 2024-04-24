@@ -1,4 +1,5 @@
 const {ObjectId} = require("mongodb");
+const jwt = require("jsonwebtoken");
 class ReaderService{
     constructor(client){
         this.Reader = client.db().collection("reader");
@@ -11,10 +12,12 @@ class ReaderService{
             NgaySinh:payload.NgaySinh,
             Phai:payload.Phai,
             DiaChi:payload.DiaChi,
-            DienThoai:payload.DienThoai
+            DienThoai:payload.DienThoai,
+            refresh_token:String,
+            id:this._id
        };
        Object.keys(reader).forEach(
-           (key)=>reader[key] === undefined && delete reader[key]
+           (key)=>reader[key] === undefined && delete reader[key],
        );
        return reader;
     }
@@ -65,14 +68,58 @@ class ReaderService{
     }
     async loginReader(data){
         const {MaDocGia,password} = data
-        console.log(MaDocGia)
         if(!MaDocGia||!password) return {erroCode:422,message:"Invalid fields"}
         const reader = await this.findByName(MaDocGia);
-        console.log("check",reader)
         if(!reader) return {erroCode:404,message:"Not found user"}
-        if(MaDocGia==password)
-        return {errCode:200,message:reader}
-        else return {errCode:200,message:"Ma doc gia or password inconect"}
+        if(MaDocGia==password){
+            
+            const accessToken = jwt.sign(
+                {
+                    _id : reader[0]._id
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn:'1800s'
+                }
+                )
+                const refreshToken = jwt.sign(
+                    {
+                        _id : reader[0]._id
+                    },
+                    process.env.ACCESS_TOKEN_SECRET,
+                    {
+                        expiresIn:'1800s'
+                    }
+                )
+                const update={refresh_token : refreshToken}
+                // await reader.save()
+                const resuilt = await this.Reader.findOneAndUpdate(
+                    {MaDocGia:data.MaDocGia},
+                    { $set: update },
+                    { returnDocument: "after" }
+                    );
+            return {erroCode:200,access_token:accessToken,data:resuilt,message:"login success"}
+        }else {return {errCode:200,message:"Ma doc gia or password inconect"}}
+    }
+    async logoutUser(cookie){
+        const cookies = cookie;
+        if(!cookies.refresh_token) return {erroCode:400,message:"user not login"}
+        //res.sendStatus(204)
+    
+        const refreshToken = cookies.refresh_token;
+        const reader = await this.find({refresh_token: refreshToken});
+        console.log("cehck",reader)
+        if(!reader) {
+            return {erroCode:404,message:"not found reader"}
+        }
+        const update={refresh_token : null}
+                const resuilt = await this.Reader.findOneAndUpdate(
+                    {MaDocGia:reader.MaDocGia},
+                    { $set: update },
+                    { returnDocument: "after" }
+                    );
+        return {erroCode: 200,message:"logout success"}
     }
 }
+
 module.exports = ReaderService;

@@ -88,7 +88,7 @@
       },
       methods:{
         async getDataprops(){
-               console.log("Check data",this.data)
+               
            },
       },
       mounted(){
